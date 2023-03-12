@@ -21,7 +21,6 @@ export const styles = StyleSheet.create({
   formContainer: {
     width: "100%",
     marginTop: 36,
-    marginBottom: 42,
 
     flexDirection: "row",
     gap: 8,
@@ -50,5 +49,15 @@ export const styles = StyleSheet.create({
   buttonText: {
     color: "#FFF",
     fontSize: 24,
+  },
+  participantsContainer: {
+    height: 500,
+    paddingBottom: 32,
+
+    flexDirection: "column",
+    gap: 16,
+  },
+  participantsList: {
+    flexDirection: "column",
   },
 });

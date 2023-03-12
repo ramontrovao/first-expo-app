@@ -1,13 +1,30 @@
-import { Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
+import { useState } from "react";
+import {
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+} from "react-native";
+
+import { Participant } from "./components/Participant";
 
 import { styles } from "./styles";
 
+interface Participant {
+  name: string;
+}
+
 export function Home() {
+  const [participants, setParticipants] = useState<Participant[]>([]);
+
   const handleAddParticipant = () => {
-    Alert.alert(
-      "Você clicou!",
-      "Tô em todo lugar, não dá pra controllah, OHOHO HAHA OHOHO HAHA"
-    );
+    setParticipants((prev) => [...prev, { name: "teste" }]);
+  };
+
+  const handleRemoveParticipant = (name: string) => {
+    Alert.alert("Sucesso!", `Você removeu o participante ${name}`);
   };
 
   return (
@@ -26,6 +43,25 @@ export function Home() {
         <TouchableOpacity style={styles.button} onPress={handleAddParticipant}>
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.participantsContainer}>
+        <Text style={styles.eventName}>Participantes</Text>
+
+        <ScrollView
+          style={styles.participantsList}
+          showsVerticalScrollIndicator={false}
+        >
+          {participants.map((participant, index) => (
+            <Participant
+              participantName={participant.name}
+              onRemoveParticipant={() =>
+                handleRemoveParticipant(participant.name)
+              }
+              key={index}
+            />
+          ))}
+        </ScrollView>
       </View>
     </View>
   );
