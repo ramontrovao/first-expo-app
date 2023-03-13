@@ -18,15 +18,35 @@ interface Participant {
 
 export function Home() {
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [nameText, setNameText] = useState("");
 
   const handleAddParticipant = () => {
-    setParticipants((prev) => [...prev, { name: "teste" }]);
+    setParticipants((prev) => [...prev, { name: nameText }]);
+
+    setNameText("");
   };
 
   const handleRemoveParticipant = (name: string) => {
-    Alert.alert("Sucesso!", `Você removeu o participante ${name}`);
-  };
+    function remove() {
+      const updatedParticipantList = participants.filter(
+        (participant) => participant.name !== name
+      );
 
+      setParticipants(updatedParticipantList);
+    }
+
+    Alert.alert(
+      `Remover ${name}`,
+      `Tem certeza que deseja remover o participante ${name}?`,
+      [
+        {
+          text: "Não",
+          style: "cancel",
+        },
+        { text: "Sim", onPress: () => remove() },
+      ]
+    );
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.eventName}>Festa da Nayeon</Text>
@@ -38,6 +58,8 @@ export function Home() {
           style={styles.input}
           placeholder="Nome do convidado"
           placeholderTextColor="#6B6B6B"
+          onChangeText={setNameText}
+          value={nameText}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleAddParticipant}>
