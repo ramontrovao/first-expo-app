@@ -7,6 +7,7 @@ import {
   Alert,
   FlatList,
 } from "react-native";
+import { EmptyParticipants } from "./components/EmptyParticipants";
 
 import { Participant } from "./components/Participant";
 
@@ -109,6 +110,7 @@ export function Home() {
               onRemoveParticipant={() => handleRemoveParticipant(item.name)}
             />
           )}
+          ListEmptyComponent={() => <EmptyParticipants />}
           showsVerticalScrollIndicator={false}
         />
       </View>
