@@ -4,8 +4,8 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   Alert,
+  FlatList,
 } from "react-native";
 
 import { Participant } from "./components/Participant";
@@ -16,14 +16,36 @@ interface Participant {
   name: string;
 }
 
+const daysOfWeekPTBR = [
+  "Domingo",
+  "Segunda-feira",
+  "Terça-feira",
+  "Quarta-feira",
+  "Quinta-feira",
+  "Sexta-feira",
+  "Sábado",
+];
+const todayDate = new Date();
+
 export function Home() {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [nameText, setNameText] = useState("");
 
   const handleAddParticipant = () => {
-    setParticipants((prev) => [...prev, { name: nameText }]);
+    const participantExists = participants.some(
+      (participant) => participant.name === nameText
+    );
 
-    setNameText("");
+    if (!participantExists) {
+      setParticipants((prev) => [...prev, { name: nameText }]);
+
+      setNameText("");
+    } else {
+      Alert.alert(
+        "ERRO",
+        `O(A) participante "${nameText}" já está adicionado(a) a lista de participantes!`
+      );
+    }
   };
 
   const handleRemoveParticipant = (name: string) => {
@@ -51,7 +73,14 @@ export function Home() {
     <View style={styles.container}>
       <Text style={styles.eventName}>Festa da Nayeon</Text>
 
-      <Text style={styles.eventDate}>Sábado, 11 de Março de 2023</Text>
+      <Text style={styles.eventDate}>
+        {daysOfWeekPTBR[todayDate.getDay()]},{" "}
+        {todayDate.toLocaleString("pt-BR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}
+      </Text>
 
       <View style={styles.formContainer}>
         <TextInput
@@ -70,20 +99,18 @@ export function Home() {
       <View style={styles.participantsContainer}>
         <Text style={styles.eventName}>Participantes</Text>
 
-        <ScrollView
-          style={styles.participantsList}
-          showsVerticalScrollIndicator={false}
-        >
-          {participants.map((participant, index) => (
+        <FlatList
+          data={participants}
+          keyExtractor={(participant) => participant.name}
+          renderItem={({ item }) => (
             <Participant
-              participantName={participant.name}
-              onRemoveParticipant={() =>
-                handleRemoveParticipant(participant.name)
-              }
-              key={index}
+              key={item.name}
+              participantName={item.name}
+              onRemoveParticipant={() => handleRemoveParticipant(item.name)}
             />
-          ))}
-        </ScrollView>
+          )}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
     </View>
   );
